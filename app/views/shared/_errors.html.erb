@@ -1,0 +1,11 @@
+
+<% if form_object.errors.any? %>
+  <div class='alert alert-error'>
+   <h4> There were some errors: </h4><br>
+    <% form_object.errors.full_messages.each do |msg| %>
+    <ul>
+    <li><%= msg %></li>
+    </ul>
+    <% end %>
+  </div>
+<% end %>

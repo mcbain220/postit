@@ -1,0 +1,16 @@
+<%= render 'shared/title', title: "Add a Category" %>
+
+
+<%= render 'shared/errors', form_object: @category %>
+
+
+
+<%= form_for @category do |c| %>
+  <div class='control-group'>
+    <%= c.label :name %>
+    <%= c.text_field :name %>
+  </div>
+  <br>
+
+  <%= c.submit 'Add Category', class: 'btn btn-primary'%>
+  <% end %> 
