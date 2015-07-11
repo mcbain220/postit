@@ -11,15 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150422203706) do
+ActiveRecord::Schema.define(version: 20150709144504) do
 
-  create_table "categories", force: true do |t|
-    t.string   "name"
+  create_table "categories", force: :cascade do |t|
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "comments", force: true do |t|
+  create_table "comments", force: :cascade do |t|
     t.text     "body"
     t.integer  "user_id"
     t.integer  "post_id"
@@ -27,22 +27,32 @@ ActiveRecord::Schema.define(version: 20150422203706) do
     t.datetime "updated_at"
   end
 
-  create_table "post_categories", force: true do |t|
+  create_table "post_categories", force: :cascade do |t|
     t.integer "category_id"
     t.integer "post_id"
   end
 
-  create_table "posts", force: true do |t|
-    t.string   "url"
-    t.string   "title"
+  create_table "posts", force: :cascade do |t|
+    t.string   "url",         limit: 255
+    t.string   "title",       limit: 255
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id",     limit: 255
   end
 
-  create_table "users", force: true do |t|
-    t.string   "username"
+  create_table "users", force: :cascade do |t|
+    t.string   "username",        limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "password_digest"
+  end
+
+  create_table "votes", force: :cascade do |t|
+    t.boolean  "vote"
+    t.integer  "user_id"
+    t.string   "voteable_type"
+    t.integer  "voteable_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

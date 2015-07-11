@@ -1,12 +1,13 @@
 class CommentsController < ApplicationController
 
+before_action :require_user
 
 def create
  
   @post = Post.find(params[:post_id])
 
   @comment = Comment.new(post_params)
-  @comment.user_id = 1  #TODO:  fix after authentication
+  @comment.user_id = current_user.id
   @comment.post = @post
 
   #alternative to above:  @post.comments.build(params.require(:comment).permit(:body))
@@ -17,6 +18,18 @@ def create
     else
       render 'posts/show'  #render view template that you submitted from (think controller action)
     end
+end
+
+def vote
+  comment = Comment.find(params[:id])
+  vote = Vote.create(voteable: comment, user: current_user, vote: params[:vote])
+  
+  if vote.valid?
+    flash[:notice] = "Your vote was counted."
+  else
+    flash[:errors] = "You can only vote on a comment once."
+  end
+    redirect_to :back  # rails will know where you came from
 end
 
 

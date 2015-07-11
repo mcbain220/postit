@@ -1,23 +1,25 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update]
+  before_action :set_post, only: [:show, :edit, :update, :vote]
+  before_action :require_user, except: [:show, :index]  # require user comes from application controller
 
   def index
-    @posts = Post.all
+    @posts = Post.all.sort_by{|x| x.total_votes}.reverse
   end
 
   def show
     @comment = Comment.new
-    @comments = @post.comments
+    @comments = @post.comments.sort_by{|x| x.total_votes}.reverse
     # remember, the setting of the post is now comings from the 'set_post' methond and 'before_action' call above
   end
 
   def new
     @post = Post.new
+    
   end
 
   def create
     @post = Post.new(post_params)
-    @post.user_id = User.first.id # TODO:  Change once we have authentication.
+    @post.user_id = current_user.id
     
     if @post.save
       flash[:notice] = "Your post was created"
@@ -40,6 +42,19 @@ class PostsController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def vote
+    vote = Vote.create(voteable: @post, user: current_user, vote: params[:vote])
+    
+
+    if vote.valid?
+      flash[:notice] = "Your vote was counted."
+    else
+      flash[:error] = "You can only vote on a post once"
+    end
+    redirect_to :back  # rails will know where you came from
+    
   end
 
 private
